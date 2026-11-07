@@ -1,0 +1,478 @@
+
+import json
+import wx
+import wx.html2
+import urllib.request
+
+from AI_Response import explain_maths, extractTranscript
+
+
+# -------------------------------
+# JavaScript: retrieve video info
+# -------------------------------
+
+VIDEO_INFO_SCRIPT = """
+(function () {
+    function findVideo(doc) {
+        let v = doc.querySelector("video");
+        if (v) return v;
+
+        for (const frame of doc.querySelectorAll("iframe")) {
+            try {
+                v = findVideo(frame.contentDocument);
+                if (v) return v;
+            } catch (e) {}
+        }
+
+        return null;
+    }
+
+    const video = findVideo(document);
+
+    if (!video) {
+        return JSON.stringify({found: false});
+    }
+
+    return JSON.stringify({
+        found: true,
+        currentTime: video.currentTime,
+        duration: video.duration,
+        paused: video.paused
+    });
+})();
+"""
+
+
+# -------------------------------
+# Helper functions
+# -------------------------------
+
+def format_time(seconds):
+    if seconds is None or seconds != seconds:
+        return "00:00"
+
+    seconds = int(seconds)
+
+    return f"{seconds // 60:02d}:{seconds % 60:02d}"
+
+
+def make_font(size, weight=wx.FONTWEIGHT_NORMAL):
+    return wx.Font(
+        size,
+        wx.FONTFAMILY_DEFAULT,
+        wx.FONTSTYLE_NORMAL,
+        weight
+    )
+
+
+# -------------------------------
+# Main application
+# -------------------------------
+
+class MyFrame(wx.Frame):
+
+    def __init__(self):
+
+        super().__init__(
+            None,
+            title="Lecture Assistant",
+            size=(1400, 850)
+        )
+
+        # Colour palette
+        self.BG = wx.Colour(17, 24, 39)
+        self.PANEL = wx.Colour(31, 41, 55)
+        self.PANEL_LIGHT = wx.Colour(39, 52, 73)
+        self.BLUE = wx.Colour(37, 99, 235)
+        self.WHITE = wx.Colour(243, 244, 246)
+        self.GREY = wx.Colour(156, 163, 175)
+
+        self.SetMinSize((1050, 650))
+
+        panel = wx.Panel(self)
+        panel.SetBackgroundColour(self.BG)
+
+        # Main layout
+        main = wx.BoxSizer(wx.VERTICAL)
+
+        # -------------------------------
+        # Header
+        # -------------------------------
+
+        header = wx.Panel(panel)
+        header.SetBackgroundColour(self.BG)
+
+        header_sizer = wx.BoxSizer(wx.HORIZONTAL)
+
+        title = wx.StaticText(
+            header,
+            label="Lecture Assistant"
+        )
+        title.SetFont(make_font(25, wx.FONTWEIGHT_BOLD))
+        title.SetForegroundColour(self.WHITE)
+
+        subtitle = wx.StaticText(
+            header,
+            label="AI-powered learning companion"
+        )
+        subtitle.SetFont(make_font(10))
+        subtitle.SetForegroundColour(self.GREY)
+
+        title_column = wx.BoxSizer(wx.VERTICAL)
+        title_column.Add(title, 0)
+        title_column.Add(subtitle, 0, wx.TOP, 3)
+
+        header_sizer.Add(title_column, 1, wx.ALIGN_CENTER_VERTICAL)
+
+        self.status = wx.StaticText(
+            header,
+            label="● Ready"
+        )
+        self.status.SetForegroundColour(
+            wx.Colour(74, 222, 128)
+        )
+        self.status.SetFont(make_font(11, wx.FONTWEIGHT_BOLD))
+
+        header_sizer.Add(
+            self.status,
+            0,
+            wx.ALIGN_CENTER_VERTICAL
+        )
+
+        header.SetSizer(header_sizer)
+
+        main.Add(header, 0, wx.EXPAND | wx.ALL, 20)
+
+        # Divider
+        divider = wx.StaticLine(panel)
+        divider.SetBackgroundColour(wx.Colour(55, 65, 81))
+
+        main.Add(divider, 0, wx.EXPAND | wx.LEFT | wx.RIGHT, 20)
+
+        # -------------------------------
+        # Main content
+        # -------------------------------
+
+        content = wx.BoxSizer(wx.HORIZONTAL)
+
+        # LEFT: Video browser
+        video_panel = wx.Panel(panel)
+        video_panel.SetBackgroundColour(self.PANEL)
+
+        video_sizer = wx.BoxSizer(wx.VERTICAL)
+
+        video_title = wx.StaticText(
+            video_panel,
+            label="Lecture"
+        )
+        video_title.SetFont(make_font(17, wx.FONTWEIGHT_BOLD))
+        video_title.SetForegroundColour(self.WHITE)
+
+        video_sizer.Add(video_title, 0, wx.ALL, 15)
+
+        self.browser = wx.html2.WebView.New(video_panel)
+
+        self.browser.LoadURL(
+            "https://video.manchester.ac.uk/embedded/"
+            "ffffffff-dbfa-80ae-0000-01926401e9e0"
+        )
+
+        video_sizer.Add(
+            self.browser,
+            1,
+            wx.EXPAND | wx.LEFT | wx.RIGHT | wx.BOTTOM,
+            12
+        )
+
+        video_panel.SetSizer(video_sizer)
+
+        content.Add(video_panel, 2, wx.EXPAND | wx.RIGHT, 12)
+
+        # RIGHT: AI Assistant
+        assistant = wx.Panel(content_parent := panel)
+        assistant.SetBackgroundColour(self.PANEL)
+
+        right = wx.BoxSizer(wx.VERTICAL)
+
+        assistant_title = wx.StaticText(
+            assistant,
+            label="AI Assistant"
+        )
+        assistant_title.SetFont(make_font(19, wx.FONTWEIGHT_BOLD))
+        assistant_title.SetForegroundColour(self.WHITE)
+
+        right.Add(assistant_title, 0, wx.ALL, 18)
+
+        description = wx.StaticText(
+            assistant,
+            label="Flag a difficult moment in your lecture "
+                  "and get help understanding it."
+        )
+        description.SetForegroundColour(self.GREY)
+        description.SetFont(make_font(10))
+
+        right.Add(description, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM, 18)
+
+        # Timestamp display
+        time_panel = wx.Panel(assistant)
+        time_panel.SetBackgroundColour(self.PANEL_LIGHT)
+
+        time_sizer = wx.BoxSizer(wx.VERTICAL)
+
+        time_label = wx.StaticText(
+            time_panel,
+            label="CURRENT TIMESTAMP"
+        )
+        time_label.SetForegroundColour(self.GREY)
+        time_label.SetFont(make_font(9, wx.FONTWEIGHT_BOLD))
+
+        self.timestamp_label = wx.StaticText(
+            time_panel,
+            label="00:00"
+        )
+        self.timestamp_label.SetForegroundColour(
+            wx.Colour(96, 165, 250)
+        )
+        self.timestamp_label.SetFont(make_font(32, wx.FONTWEIGHT_BOLD))
+
+        time_sizer.Add(time_label, 0, wx.ALL, 10)
+        time_sizer.Add(self.timestamp_label, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM, 10)
+
+        time_panel.SetSizer(time_sizer)
+
+        right.Add(time_panel, 0, wx.EXPAND | wx.LEFT | wx.RIGHT, 15)
+
+        # Flag button
+        self.flag_button = wx.Button(
+            assistant,
+            label="⚑  Flag this moment"
+        )
+
+        self.flag_button.SetFont(make_font(13, wx.FONTWEIGHT_BOLD))
+        self.flag_button.SetBackgroundColour(self.BLUE)
+        self.flag_button.SetForegroundColour(wx.WHITE)
+        self.flag_button.SetMinSize((-1, 55))
+
+        self.flag_button.Bind(
+            wx.EVT_BUTTON,
+            self.on_button_click
+        )
+
+        right.Add(
+            self.flag_button,
+            0,
+            wx.EXPAND | wx.ALL,
+            15
+        )
+
+        # Download button
+        self.download_button = wx.Button(
+            assistant,
+            label="Download transcript"
+        )
+
+        self.download_button.SetFont(make_font(11))
+        self.download_button.SetMinSize((-1, 42))
+
+        self.download_button.Bind(
+            wx.EVT_BUTTON,
+            self.download_transcript
+        )
+
+        right.Add(
+            self.download_button,
+            0,
+            wx.EXPAND | wx.LEFT | wx.RIGHT | wx.BOTTOM,
+            15
+        )
+
+        # AI response output
+        response_title = wx.StaticText(
+            assistant,
+            label="EXPLANATION"
+        )
+        response_title.SetForegroundColour(self.GREY)
+        response_title.SetFont(make_font(10, wx.FONTWEIGHT_BOLD))
+
+        right.Add(response_title, 0, wx.LEFT | wx.RIGHT, 18)
+
+        self.info_box = wx.TextCtrl(
+            assistant,
+            style=wx.TE_MULTILINE | wx.TE_READONLY | wx.BORDER_NONE
+        )
+
+        self.info_box.SetBackgroundColour(
+            wx.Colour(24, 32, 46)
+        )
+        self.info_box.SetForegroundColour(self.WHITE)
+        self.info_box.SetFont(make_font(11))
+
+        right.Add(
+            self.info_box,
+            1,
+            wx.EXPAND | wx.ALL,
+            15
+        )
+
+        assistant.SetSizer(right)
+
+        content.Add(assistant, 1, wx.EXPAND)
+
+        main.Add(
+            content,
+            1,
+            wx.EXPAND | wx.LEFT | wx.RIGHT | wx.BOTTOM,
+            20
+        )
+
+        panel.SetSizer(main)
+
+        self.Centre()
+
+    # -------------------------------
+    # Get video information
+    # -------------------------------
+
+    def get_video_info(self):
+
+        result = self.browser.RunScript(VIDEO_INFO_SCRIPT)
+
+        if isinstance(result, tuple):
+            success, result = result
+
+            if not success:
+                return None
+
+        try:
+            return json.loads(result)
+
+        except (TypeError, ValueError):
+            return None
+
+    # -------------------------------
+    # Flag button
+    # -------------------------------
+
+    def on_button_click(self, event):
+
+        info = self.get_video_info()
+
+        if info is None or not info["found"]:
+
+            self.status.SetLabel("● Video unavailable")
+            self.info_box.AppendText(
+                "Could not retrieve video information.\n\n"
+            )
+            return
+
+        timestamp = format_time(info["currentTime"])
+
+        self.timestamp_label.SetLabel(timestamp)
+
+        self.status.SetLabel("● Processing")
+
+        self.info_box.AppendText(
+            f"\nFlagged at {timestamp}\n"
+            f"Generating explanation...\n\n"
+        )
+
+        try:
+            transcript = extractTranscript(timestamp, 30)
+
+            response = explain_maths(transcript)
+
+            self.info_box.AppendText(response + "\n\n")
+
+            self.status.SetLabel("● Ready")
+
+        except Exception as error:
+
+            self.info_box.AppendText(
+                f"AI error: {error}\n\n"
+            )
+
+            self.status.SetLabel("● Error")
+
+    # -------------------------------
+    # Download transcript
+    # -------------------------------
+
+    def download_transcript(self, event):
+
+        script = """
+        let scripts = document.querySelectorAll(
+            'script[type="module"]'
+        );
+
+        let captionsURL = null;
+
+        for (let script of scripts) {
+
+            let match = script.textContent.match(
+                /const\\s+captions\\s*=\\s*["']([^"']+)["']/
+            );
+
+            if (match) {
+                captionsURL = match[1];
+                break;
+            }
+        }
+
+        captionsURL;
+        """
+
+        result = self.browser.RunScript(script)
+
+        if isinstance(result, tuple):
+            success, url = result
+            if not success:
+                url = None
+        else:
+            url = result
+
+        if not url or url == "null":
+
+            self.info_box.AppendText(
+                "Could not find transcript URL.\n"
+            )
+            return
+
+        try:
+
+            response = urllib.request.urlopen(url)
+
+            transcript = response.read().decode("utf-8")
+
+            with open(
+                "lecture_transcript.vtt",
+                "w",
+                encoding="utf-8"
+            ) as file:
+
+                file.write(transcript)
+
+            self.info_box.AppendText(
+                "Transcript downloaded successfully!\n"
+            )
+
+            self.status.SetLabel("● Transcript downloaded")
+
+        except Exception as error:
+
+            self.info_box.AppendText(
+                f"Download failed: {error}\n"
+            )
+
+            self.status.SetLabel("● Download failed")
+
+
+# -------------------------------
+# Run application
+# -------------------------------
+
+app = wx.App()
+
+frame = MyFrame()
+frame.Show()
+
+app.MainLoop()

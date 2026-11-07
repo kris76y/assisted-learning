@@ -1,0 +1,575 @@
+WEBVTT
+
+00:00.000 --> 00:06.620
+This week we start a new topic, formal logic systems. The idea of this topic is
+that we
+
+00:06.620 --> 00:12.140
+model the kind of logical arguments that we encounter in real life and also in
+mathematics
+
+00:12.140 --> 00:21.300
+by mathematical objects. Then we can use maths to reason about arguments and
+prove properties of
+
+00:21.300 --> 00:28.800
+logical reasoning. So what do we mean by a logical argument? Well, we mean
+something which starts
+
+00:28.800 --> 00:35.120
+with a bunch of claims which are assumptions and then has a conclusion. Usually
+we put the word
+
+00:35.120 --> 00:41.360
+therefore before a logical conclusion in an argument. Here's one that my parents
+made many
+
+00:41.360 --> 00:48.160
+times. If you can watch cartoons, you're not ill. If you're not ill, you go to
+school. If you go to
+
+00:48.160 --> 00:55.040
+school, you cannot watch cartoons. Therefore, you cannot watch cartoons. Now, we
+may disagree
+
+00:55.040 --> 01:00.520
+with the premises of this argument. Believe me, I tried. But if we accept those
+premises,
+
+01:01.100 --> 01:07.020
+then logically we must accept the conclusion. And what do I mean by logically
+there? Well,
+
+01:07.520 --> 01:14.980
+these expressions contain some of the key phrases that we saw in chapter two. We
+have if here
+
+01:16.320 --> 01:25.700
+and here and here. And we have not here, here and here. And again, we have a not
+down here.
+
+01:26.120 --> 01:34.400
+So the assumptions express relationships between various claims by combining
+these claims together
+
+01:34.400 --> 01:41.140
+using the key phrases. Now, the basic claims about the world, which we can't
+break down
+
+01:41.940 --> 01:48.580
+using the key phrases, we will refer to as atomic propositions. And those have
+to be things which
+
+01:48.580 --> 01:55.560
+can either be true or false, which could be asserted, denied, argued, debated.
+So basically
+
+01:55.560 --> 02:02.480
+something is a claim if it would be grammatical to say they say and then that
+thing. For instance,
+
+02:02.980 --> 02:09.420
+they say the moon is made of cheese. That makes grammatical sense. It may not
+make sense in the
+
+02:09.420 --> 02:14.660
+world, but there's no grammatical problem with that. So the moon is made of
+cheese is a claim.
+
+02:15.020 --> 02:20.600
+And that's the kind of thing that we're going to model using an atomic
+proposition because
+
+02:20.600 --> 02:26.220
+it doesn't contain any of the key phrases. So what atomic propositions do we
+have here?
+
+02:26.560 --> 02:35.160
+Well, we have you can watch cartoons. We have you are ill. Let's just work
+around the not,
+
+02:35.160 --> 02:40.880
+which is a key phrase. Here we have you are ill again, again in the negative
+form,
+
+02:41.460 --> 02:48.640
+and we have you go to school. And then we have you go to school again. And then
+here we have
+
+02:48.640 --> 02:56.600
+you can watch cartoons, but it has a knot inside it. And finally, we have the
+negated version of
+
+02:56.600 --> 03:02.840
+you can watch cartoons. Now, one way that we can tell that this argument is
+logically correct
+
+03:02.840 --> 03:10.480
+is by just replacing each of these atomic propositions with a variable. So if I
+rub these
+
+03:10.480 --> 03:36.360
+out and put a variable name in here, the argument still makes sense. So we don't
+actually need to
+
+03:36.360 --> 03:44.460
+know what claims about the world P, Q and R are here, because if we accept all
+of the assumptions
+
+03:44.460 --> 03:51.440
+of this argument, then we have to accept the conclusion no matter which claims
+P, Q and R
+
+03:51.440 --> 03:59.340
+are. Now let's look at a real world argument, which is not logically valid. Here
+it is.
+
+03:59.760 --> 04:06.760
+My assumptions are my teapot is made of glass and an anvil fell on my teapot.
+Therefore,
+
+04:07.260 --> 04:13.560
+my teapot is broken. Now, you might think that the conclusion here does follow
+if you accept
+
+04:13.560 --> 04:20.280
+both of the premises, but it doesn't follow just because of the meanings of the
+key phrases,
+
+04:20.500 --> 04:27.340
+because if we look here, we have absolutely no key phrases. So if we were to
+replace these basic
+
+04:27.340 --> 04:35.940
+propositions, these atomic propositions by variables, we would get which says if
+we assume
+
+04:35.940 --> 04:42.300
+P and Q, whatever they are, then we have to accept R whatever it is. And that
+doesn't work.
+
+04:42.300 --> 04:50.700
+So in logic, we study when a series of assumptions, if accepted, forces us to
+accept a conclusion
+
+04:50.700 --> 04:57.060
+because of the meanings of the key phrases. Now, as I said, we want to model
+these claims
+
+04:57.060 --> 05:02.600
+by mathematical objects, so that we can start proving theorems about how logic
+works.
+
+05:02.880 --> 05:10.040
+So what we need to do is assuming that we have a set of symbols to refer to
+atomic propositions,
+
+05:10.040 --> 05:16.940
+we have to introduce a notation that combines them for every possible key
+phrase. That's what
+
+05:16.940 --> 05:23.660
+we'll do next. So here is the formal definition from the notes. If you look at
+the first case,
+
+05:23.920 --> 05:30.020
+it tells us that if we have one of our propositional variables, say P, then that
+by itself
+
+05:30.020 --> 05:35.820
+should count as a propositional formula. So propositional formula is going to be
+our formal
+
+05:35.820 --> 05:41.960
+model of a claim. And we're saying, well, that claim could be an atomic claim
+with no key phrases
+
+05:41.960 --> 05:48.220
+inside it. So we're just going to represent it by a variable. In this unit,
+we'll use the letters of
+
+05:48.220 --> 05:55.360
+the alphabet from P onwards to mean single atomic propositional variables. Now
+we have two expressions
+
+05:55.360 --> 06:04.060
+read bottom and top, or false and true. We'll have those as formulas. They won't
+be as important
+
+06:04.060 --> 06:11.080
+this week. First, bottom is intended to represent a claim which is always false
+or which you could
+
+06:11.080 --> 06:17.340
+never defend. And top, or true, is intended to represent a claim which is always
+true and
+
+06:17.340 --> 06:23.960
+which therefore you could never deny. So now we have the atomic propositional
+formulas.
+
+06:24.360 --> 06:29.980
+We need some ways to build more complicated propositional formulas out of them.
+Just like
+
+06:29.980 --> 06:35.980
+the example, our atomic propositions were connected by the key phrases and that
+allowed
+
+06:35.980 --> 06:42.700
+us to reason about them logically. So if we look at the third case here, it says
+if A is a propositional
+
+06:42.700 --> 06:48.680
+formula, then this funny expression is a propositional formula. And we will read
+that
+
+06:48.680 --> 06:55.700
+not A. Notice that we use the early letters in the alphabet, A, B, C, etc, for
+propositional
+
+06:55.700 --> 07:00.380
+formulas in this unit. And it's important to remember that these are very
+different things.
+
+07:00.780 --> 07:07.160
+Propositional variables are single symbols, but as we've seen in the third case,
+a propositional
+
+07:07.160 --> 07:13.840
+formula is a string of symbols. So we will read the one in the third case as not
+A and our intended
+
+07:13.840 --> 07:20.780
+meaning is that it means A is false. Now in the last case of the definition
+here, we assume that
+
+07:20.780 --> 07:26.860
+constructed two propositional formulas A and B. And because those are formulas,
+they could be very
+
+07:26.860 --> 07:33.380
+long expressions full of lots of symbols. Then the following are also
+propositional formulas.
+
+07:33.920 --> 07:41.800
+The first one we read A and B. The second one we read A or B. And the third one
+we read A implies
+
+07:41.800 --> 07:50.200
+B or if A then B. So those are going to be strings of symbols which we intend to
+model
+
+07:50.200 --> 07:58.700
+the ideas of the key phrases and, or, and implies. But at the moment, they're
+just symbols. We haven't
+
+07:58.700 --> 08:04.500
+yet put anything into the model that says what these symbols actually mean.
+We've just defined
+
+08:04.500 --> 08:09.240
+them and I've given you a way to read them intuitively, which suggests the rules
+that we're
+
+08:09.240 --> 08:17.720
+going to define later. Finally, in mathematics, we often have conditions where
+we say if and only if.
+
+08:17.720 --> 08:25.340
+So it's very useful to have a shorthand notation for that. And for that we use
+this double arrow,
+
+08:25.440 --> 08:32.020
+which we read double implication by implication, or if and only if. But we
+consider that just to
+
+08:32.020 --> 08:40.080
+be a shorthand for this longer formula where we spell out what it means
+precisely. So let's see
+
+08:40.080 --> 08:48.860
+an example of a logical formula. Well, to get started, I'm just going to pick
+some propositional
+
+08:48.860 --> 08:54.820
+variables. So P is a propositional variable, so that's a formula. Q is a
+propositional variable,
+
+08:54.820 --> 09:01.360
+so that's a formula by itself. Now P space Q is not a formula because there are
+no cases of the
+
+09:01.360 --> 09:06.320
+definition which would allow us to just put two variables right next to each
+other. But we could
+
+09:06.320 --> 09:13.020
+join them with the or symbol, for example. So P or Q is a propositional formula.
+And strictly
+
+09:13.020 --> 09:19.700
+speaking, I should bracket this because the definition asks us to bracket it.
+Now I could
+
+09:19.700 --> 09:26.760
+use the third case to make this a bit more complicated and say not P or Q. And
+then I could
+
+09:26.760 --> 09:33.900
+go back to the fourth case and, for instance, say not P or Q implies P. That's a
+propositional
+
+09:33.900 --> 09:42.460
+formula. Or not P or Q implies not P. That's a propositional formula. So
+anything that we can get
+
+09:42.460 --> 09:49.740
+starting from propositional variables, P, Q, R, etc., and combining them using
+the cases of this
+
+09:49.740 --> 09:56.240
+definition is a propositional formula. Now because of the brackets in the
+definition,
+
+09:57.120 --> 10:03.760
+propositional formulas can get very cumbersome. Look at the example here. P and
+Q implies Q or
+
+10:03.760 --> 10:10.800
+P. There are too many brackets in that and they actually stop us from reading it
+easily. So we're
+
+10:10.800 --> 10:16.780
+going to define a convention which allows us not to write down the brackets even
+though, strictly
+
+10:16.780 --> 10:23.460
+speaking, in the formula as defined in the real mathematical object, those
+brackets are actually
+
+10:23.460 --> 10:28.780
+there. We're just not going to write them as human beings when we want to
+describe which formula we
+
+10:28.780 --> 10:35.560
+So the idea is that we rank the different connectives. So we say that negation
+binds
+
+10:35.560 --> 10:41.040
+the most tightly. So when we're thinking about where to put brackets, if we have
+a negation,
+
+10:41.200 --> 10:47.640
+that will be deepest inside all of the brackets. Next come and and or, which are
+equal to each other,
+
+10:47.700 --> 10:53.920
+but they bind a bit less tightly than negation. And finally, implication and by
+implication.
+
+10:53.920 --> 10:58.900
+So that means that if we have a formula with, for example, an and and an
+implication,
+
+10:59.620 --> 11:04.160
+the and will be within the brackets and the implication will be on the outside.
+
+11:04.680 --> 11:10.720
+It's a bit easier to think about this by looking at examples. So for instance,
+we can just write
+
+11:11.360 --> 11:19.560
+P and Q implies R for this thing here with lots of brackets because our
+precedence convention
+
+11:19.560 --> 11:26.780
+tells us that the and binds more tightly than the implies. So the P and Q is
+deepest inside
+
+11:26.780 --> 11:32.960
+the brackets and then the implies R is on the outside. Now let's look at this
+expression.
+
+11:33.520 --> 11:39.120
+We have a not here, which will bind most tightly. Now we have an implies, but
+over here we have an
+
+11:39.120 --> 11:44.540
+or which binds more tightly than implies. So we should bracket this part and
+then finally bracket
+
+11:44.540 --> 11:55.500
+whole thing. So in the end we get not P implies Q or R, like that. Now what
+about this one,
+
+11:55.580 --> 12:05.520
+P and Q implies Q or not P? Well, the not P will be deepest inside the brackets.
+Then we'll have the
+
+12:05.520 --> 12:13.520
+P and Q and the Q or not P bracketed like that. And finally, the implication,
+which binds least
+
+12:13.520 --> 12:20.160
+tightly, will be the outermost connective. Now what about the expression on the
+bottom? Well,
+
+12:20.220 --> 12:25.940
+remember that and and or have equal precedence. So that means that this
+expression on the bottom
+
+12:25.940 --> 12:32.080
+is ambiguous and we will never write this. We either have to bracket the P and Q
+or we have to
+
+12:32.080 --> 12:39.560
+bracket the Q or R so that we say unambiguously what we mean. Now because we
+want to do maths
+
+12:39.560 --> 12:44.500
+with formulas, we need some definitions that let us take formulas apart. In
+particular,
+
+12:44.900 --> 12:51.280
+we need to define the notion of a subformula. And the idea is that a subformula
+is just any string
+
+12:51.280 --> 12:56.420
+of the formula that is itself a propositional formula. So a propositional
+formula, remember,
+
+12:56.600 --> 13:02.400
+is just a mathematical object. It's just a string of symbols. And so we can take
+any substring of
+
+13:02.400 --> 13:08.600
+that string and if that substring is a propositional formula, then it's a
+subformula of our original
+
+13:08.600 --> 13:15.160
+formula. But we have to remember one thing first. If we write a propositional
+formula without
+
+13:15.160 --> 13:22.060
+brackets, then really we mean the fully bracketed version of that propositional
+formula. So before
+
+13:22.060 --> 13:29.760
+working out the subformulas, it's a good idea to put the brackets back in. Now
+we can see that the
+
+13:29.760 --> 13:45.200
+subformulas are not P, Q or not P, P and Q, and the whole thing P and Q implies
+Q or not P.
+
+13:45.860 --> 13:52.820
+Notice that the whole formula is a subformula of itself. Now I've missed out two
+subformulas.
+
+13:52.820 --> 14:00.400
+Can you see what they are? Yes, P and Q individually are formulas, and they are
+also
+
+14:00.400 --> 14:06.380
+therefore subformulas of this formula. So now I've listed all of the
+subformulas,
+
+14:06.560 --> 14:12.480
+and because we took the trouble to completely bracket this formula before
+looking for substrings
+
+14:12.480 --> 14:18.620
+inside it which are formulas, we didn't make the mistake of thinking that Q
+implies Q, for instance,
+
+14:18.620 --> 14:24.060
+was a subformula of this formula. If we didn't put the brackets in, it would
+look like it was
+
+14:24.060 --> 14:30.740
+a substring which is itself a formula, but it's clear once we put the brackets
+in that Q implies
+
+14:30.740 --> 14:37.920
+open bracket Q is not a well-formed formula. So now we've modelled most of what
+we saw in
+
+14:37.920 --> 14:44.100
+our intuitive example, but we haven't yet modelled the list of assumptions
+followed by therefore,
+
+14:44.100 --> 14:48.200
+followed by a consequent that we saw in those arguments that we're trying to
+model.
+
+14:48.380 --> 14:54.280
+So we'll call such a thing a judgment, and this is the notation that we'll use
+for it.
+
+14:54.440 --> 15:00.440
+We'll write the list of assumptions separated by commas, and then this sideways
+T, sometimes called
+
+15:00.440 --> 15:05.780
+the turnstile, if you want to give it a name, and then a single formula on the
+right-hand side.
+
+15:05.980 --> 15:10.620
+So the list of formulas on the left we call assumptions, and the single formula
+on the right
+
+15:10.620 --> 15:16.340
+we call the consequent, or sometimes conclusion. Now I say a list of
+assumptions, but one important
+
+15:16.340 --> 15:20.900
+thing is that we are not going to care about the order of the assumptions in
+that list.
+
+15:21.180 --> 15:26.020
+So although we write this as a list, you could think of it as a set of
+assumptions where we
+
+15:26.020 --> 15:30.420
+just haven't written the curly brackets. So now we have all the ingredients that
+we need
+
+15:30.420 --> 15:35.720
+to translate the intuitive example into a formal mathematical object.
+
+15:37.940 --> 15:45.440
+So here's our intuitive example, and now we can replace the first line with a
+propositional formula,
+
+15:52.290 --> 16:10.360
+and the same with the second line, and the third assumption, and the conclusion.
+
+16:15.290 --> 16:23.050
+Now we can combine the three assumptions into a list of assumptions by just
+putting commas between
+
+16:23.050 --> 16:32.460
+them, and we can replace the word therefore with our sideways T symbol, and now
+we have
+
+16:32.460 --> 16:38.080
+our mathematical object which is intended to be a model of the meaning of that
+argument.
+
+16:39.340 --> 16:45.600
+Well this is all well and good, but at the moment all we've defined is a way of
+translating
+
+16:46.120 --> 16:53.120
+the terminology in the argument into a string of symbols. We haven't yet said
+anything about
+
+16:53.120 --> 16:58.660
+what the strings of symbols mean. Well the way we're going to define the meaning
+of these strings
+
+16:58.660 --> 17:05.420
+of symbols is by giving rules for proving that arguments in this symbolic form
+are valid.
+
